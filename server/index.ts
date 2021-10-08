@@ -1,8 +1,11 @@
 import { App } from "@tinyhttp/app";
+import morgan from "morgan";
 
 const app = new App();
 
-app.get("/", (request, response) => {
+app.use(morgan("dev"));
+
+app.get("/", (_, response) => {
   response.send("henlo from tinyhttp");
 });
 
