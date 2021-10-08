@@ -1,0 +1,25 @@
+{
+  "name": "realworld-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:nulfrost/realworld-app.git",
+  "author": "Dane Miller <khadane.miller@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@tinyhttp/app": "^2.0.10"
+  },
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^7.0.0",
+    "typescript": "^4.4.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
+}
