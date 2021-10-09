@@ -1,9 +1,11 @@
 import express, { Response, Request } from "express";
 import morgan from "morgan";
+import { router } from "@/routes/index";
 
 const app = express();
 
 app.use(morgan("dev"));
+//app.use("/api", [router]);
 
 app.get("/", (_, response: Response) => {
   response.send("Welcome to the Conduit API");
@@ -20,7 +22,7 @@ app.use((request: Request, response: Response) => {
 app.use((error: any, _: Request, response: Response) => {
   return response.status(error.status).send({
     status: error.status,
-    title: "Uh oh! An error has occurred, our best engineers are on it.",
+    title: error.title,
     description: `Error: ${error.message}`,
   });
 });
