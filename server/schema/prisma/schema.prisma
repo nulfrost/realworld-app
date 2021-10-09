@@ -9,3 +9,48 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  profile   Profile?
+}
+
+model Profile {
+  id        String    @id @default(uuid())
+  username  String
+  bio       String
+  image     String
+  following Boolean
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @unique
+  article   Article[]
+  comment   Comment[]
+}
+
+model Article {
+  id            String   @id @default(uuid())
+  slug          String
+  title         String
+  description   String
+  body          String
+  tags          String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  favorited     Boolean
+  favoriteCount Int
+  author        Profile  @relation(fields: [profileId], references: [id])
+  profileId     String
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  body      String
+  author    Profile  @relation(fields: [profileId], references: [id])
+  profileId String
+}
