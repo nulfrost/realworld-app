@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "@tinyhttp/app";
+import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import { db } from "db";
 import { secrets } from "config";
@@ -16,27 +16,25 @@ export = {
     const { password, email } = request.body as Login;
 
     const isValidLogin = validator.loginValidator(request.body);
-    if (!isValidLogin) return next({ status: 422, error: isValidLogin });
+    if (!isValidLogin) return next({ status: 422, message: isValidLogin });
 
-    const user: User | null = await db.user.findFirst({
+    const user: User | null = await db.user.findUnique({
       where: {
         email,
+      },
+      include: {
+        profile: true,
       },
     });
 
     const isValidPassword = await bcrypt.compare(password, user!.password);
     if (!isValidPassword)
-      return next({ status: 422, error: "Invalid username or password." });
+      return next({ status: 422, message: "Invalid username or password." });
 
     const token = jsonwebtoken.sign({ id: user?.id }, secrets?.jwt as string, {
       algorithm: "HS256",
     });
 
-    response.status(200).json({
-      user: {
-        ...user,
-        token,
-      },
-    });
+    response.status(200).json({ token, user });
   },
 };
