@@ -3,8 +3,8 @@ import morgan from "morgan";
 
 const app = new App({
   onError: (error, _, response) => {
-    response.status(500).json({
-      status: 500,
+    response.status(error.status).json({
+      status: error.status,
       title: "There was an error processing your request.",
       detail: `Error ${error}`,
     });
