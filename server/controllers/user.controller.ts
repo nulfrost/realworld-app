@@ -23,7 +23,7 @@ export = {
           description: isValidLogin,
         });
 
-      const user: User | null = await db.user.findUnique({
+      const user = await db.user.findUnique({
         where: {
           email,
         },
@@ -62,7 +62,8 @@ export = {
 
       return response.status(200).json({
         user: {
-          ...omit(['password'], user),
+          ...omit(['password', 'profile', 'createdAt', 'updatedAt'], user),
+          ...omit(['userId'], user?.profile),
           token,
         },
       });
@@ -105,7 +106,7 @@ export = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 8);
-      const newUser: User | null = await db.user.create({
+      const newUser = await db.user.create({
         data: {
           email,
           password: hashedPassword,
@@ -121,7 +122,8 @@ export = {
       });
       return response.status(201).json({
         user: {
-          ...omit(['password'], newUser),
+          ...omit(['password', 'profile', 'createdAt', 'updatedAt'], newUser),
+          ...omit(['userId'], newUser?.profile),
         },
       });
     } catch (error) {
@@ -132,7 +134,7 @@ export = {
     try {
       const userId = response.locals.token.id as string;
 
-      const user: User | null = await db.user.findUnique({
+      const user = await db.user.findUnique({
         where: {
           id: userId,
         },
@@ -149,7 +151,10 @@ export = {
       });
 
       return response.status(200).json({
-        ...omit(['password'], user),
+        user: {
+          ...omit(['password', 'profile', 'createdAt', 'updatedAt'], user),
+          ...omit(['userId'], user?.profile),
+        },
       });
     } catch (error) {
       return next(createServerError(error));
@@ -191,8 +196,10 @@ export = {
       });
 
       return response.status(200).json({
-        ...omit(['password', 'profile', 'createdAt', 'updatedAt'], user),
-        ...omit(['userId'], user?.profile),
+        user: {
+          ...omit(['password', 'profile', 'createdAt', 'updatedAt'], user),
+          ...omit(['userId'], user?.profile),
+        },
       });
     } catch (error) {
       return next(createServerError(error));
