@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '@prisma/client';
+import { User, Profile } from '@prisma/client';
 import { db } from 'db';
 import { secrets } from 'config';
 import { Login, Message, Register } from 'types';
@@ -150,6 +150,49 @@ export = {
 
       return response.status(200).json({
         ...omit(['password'], user),
+      });
+    } catch (error) {
+      return next(createServerError(error));
+    }
+  },
+  updateUser: async (
+    request: Request<
+      {},
+      {},
+      { user: Omit<User & Profile, 'createdAt' | 'updatedAt' | 'userId' | 'id'> }
+    >,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const {
+        user: { username, password, email, bio, image },
+      } = request.body;
+      const userId = response.locals.token.id as string;
+
+      const user = await db.user.update({
+        where: {
+          id: userId,
+        },
+        include: {
+          profile: true,
+        },
+        data: {
+          email,
+          password,
+          profile: {
+            update: {
+              username,
+              image,
+              bio,
+            },
+          },
+        },
+      });
+
+      return response.status(200).json({
+        ...omit(['password', 'profile', 'createdAt', 'updatedAt'], user),
+        ...omit(['userId'], user?.profile),
       });
     } catch (error) {
       return next(createServerError(error));
