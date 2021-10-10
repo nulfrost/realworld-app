@@ -16,19 +16,18 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  profile   Profile?
+  profile   Profile? @relation("ProfileToUser")
 }
 
 model Profile {
-  id        String    @id @default(uuid())
-  username  String    @unique
-  bio       String?
-  image     String?
-  following Boolean?
-  user      User      @relation(fields: [userId], references: [id])
-  userId    String    @unique
-  article   Article[]
-  comment   Comment[]
+  id       String    @id @default(uuid())
+  username String    @unique
+  bio      String?
+  image    String?
+  articles Article[]
+  comments Comment[]
+  user     User      @relation("ProfileToUser", fields: [userId], references: [id])
+  userId   String    @unique
 }
 
 model Article {
@@ -40,7 +39,6 @@ model Article {
   tags          String[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
-  favorited     Boolean
   favoriteCount Int
   author        Profile  @relation(fields: [profileId], references: [id])
   profileId     String

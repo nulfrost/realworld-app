@@ -1,16 +1,14 @@
-interface User {
+type User = {
   email: string;
   token: string;
   username: string;
-  bio: string;
-  image: string;
   password: string;
-}
+};
 
-export interface Login {
-  user: Omit<User, 'token' | 'username' | 'bio' | 'image'>;
-}
+export type Login = {
+  user: Omit<User, 'token' | 'username'>;
+};
 
-export interface Register {
-  user: Omit<User, 'token' | 'bio' | 'image'>;
-}
+export type Register = {
+  user: Omit<User, 'token'>;
+};

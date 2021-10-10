@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { User, Profile } from '@prisma/client';
+import { User } from '@prisma/client';
 import { db } from 'db';
 import { secrets } from 'config';
 import { Login, Message, Register } from 'types';
@@ -28,7 +28,14 @@ export = {
           email,
         },
         include: {
-          profile: true,
+          profile: {
+            select: {
+              id: true,
+              image: true,
+              username: true,
+              bio: true,
+            },
+          },
         },
       });
 
@@ -50,6 +57,7 @@ export = {
 
       const token = jsonwebtoken.sign({ id: user?.id }, secrets?.jwt as string, {
         algorithm: 'HS256',
+        expiresIn: '1hr',
       });
 
       return response.status(200).json({
@@ -119,5 +127,10 @@ export = {
     } catch (error) {
       return next(createServerError(error));
     }
+  },
+  getCurrentUser: (request: Request, response: Response) => {
+    try {
+      // requires auth middleware
+    } catch (error) {}
   },
 };
