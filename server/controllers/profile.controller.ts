@@ -13,8 +13,6 @@ export = {
     try {
       const { username } = request.params;
 
-      console.log(response.locals.token.id);
-
       const user = await db.profile.findUnique({
         where: {
           username,

@@ -128,9 +128,31 @@ export = {
       return next(createServerError(error));
     }
   },
-  getCurrentUser: (request: Request, response: Response) => {
+  getCurrentUser: async (_, response: Response, next: NextFunction) => {
     try {
-      // requires auth middleware
-    } catch (error) {}
+      const userId = response.locals.token.id as string;
+
+      const user: User | null = await db.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          profile: {
+            select: {
+              id: true,
+              bio: true,
+              image: true,
+              username: true,
+            },
+          },
+        },
+      });
+
+      return response.status(200).json({
+        ...omit(['password'], user),
+      });
+    } catch (error) {
+      return next(createServerError(error));
+    }
   },
 };
