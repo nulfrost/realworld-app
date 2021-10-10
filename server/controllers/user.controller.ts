@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import { db } from "db";
 import { secrets } from "config";
-import { Login } from "types/auth.types";
+import { Login, Error } from "types";
 import bcrypt from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
-import validator from "utils/schemas";
+import validator from "@/utils/schemas";
 
 export = {
   login: async (
@@ -19,7 +19,7 @@ export = {
     if (!isValidLogin)
       return next({
         status: 422,
-        title: "InvalidError",
+        title: Error.INVALID,
         message: isValidLogin,
       });
 
@@ -32,11 +32,19 @@ export = {
       },
     });
 
+    if (!user) {
+      return next({
+        status: 404,
+        title: Error.NOTFOUND,
+        message: "User does not exist.",
+      });
+    }
+
     const isValidPassword = await bcrypt.compare(password, user!.password);
     if (!isValidPassword)
       return next({
         status: 422,
-        title: "InvalidError",
+        title: Error.INVALID,
         message: "Invalid username or password.",
       });
 

@@ -1,11 +1,11 @@
 import express, { Response, Request } from "express";
 import morgan from "morgan";
-import { router } from "@/routes/index";
+import { router as userRouter } from "@/routes/user.route";
 
 const app = express();
 
 app.use(morgan("dev"));
-//app.use("/api", [router]);
+app.use("/api", userRouter);
 
 app.get("/", (_, response: Response) => {
   response.send("Welcome to the Conduit API");
