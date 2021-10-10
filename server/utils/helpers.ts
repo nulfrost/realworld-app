@@ -1,9 +1,10 @@
 import { Message } from '../types';
 
-export const omit = (key: string, obj: Record<string, any>) => {
-  const { [key]: omitted, ...rest } = obj;
-  return rest;
-};
+export function omit(keys: string[], obj: Record<string, any>) {
+  if (!keys.length) return obj;
+  const { [keys.pop() as any]: omitted, ...rest } = obj;
+  return omit(keys, rest);
+}
 
 // @ts-ignore
 export const createServerError = (error) => {
