@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import { db } from "db";
 import { secrets } from "config";
-import { Login, Error } from "types";
+import { Login, Message } from "types";
 import bcrypt from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 import validator from "@/utils/schemas";
@@ -13,14 +13,16 @@ export = {
     response: Response,
     next: NextFunction
   ) => {
-    const { password, email } = request.body;
+    const {
+      user: { password, email },
+    } = request.body;
 
     const isValidLogin = validator.loginValidator(request.body);
     if (!isValidLogin)
       return next({
         status: 422,
-        title: Error.INVALID,
-        message: isValidLogin,
+        title: Message.INVALID,
+        description: isValidLogin,
       });
 
     const user: User | null = await db.user.findUnique({
@@ -35,8 +37,8 @@ export = {
     if (!user) {
       return next({
         status: 404,
-        title: Error.NOTFOUND,
-        message: "User does not exist.",
+        title: Message.NOTFOUND,
+        description: "User with that e-mail was not found.",
       });
     }
 
@@ -44,8 +46,8 @@ export = {
     if (!isValidPassword)
       return next({
         status: 422,
-        title: Error.INVALID,
-        message: "Invalid username or password.",
+        title: Message.INVALID,
+        description: "Invalid username or password.",
       });
 
     const token = jsonwebtoken.sign({ id: user?.id }, secrets?.jwt as string, {

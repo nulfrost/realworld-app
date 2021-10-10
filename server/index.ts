@@ -1,9 +1,10 @@
-import express, { Response, Request } from "express";
+import express, { Response, Request, NextFunction } from "express";
 import morgan from "morgan";
 import { router as userRouter } from "@/routes/user.route";
 
 const app = express();
 
+app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api", userRouter);
 
@@ -19,12 +20,8 @@ app.use((request: Request, response: Response) => {
   });
 });
 
-app.use((error: any, _: Request, response: Response) => {
-  return response.status(error.status).send({
-    status: error.status,
-    title: error.title,
-    description: `Error: ${error.message}`,
-  });
+app.use((error: any, _: Request, response: Response, next: NextFunction) => {
+  return response.status(error.status).json(error);
 });
 
 app.listen(4000, () =>

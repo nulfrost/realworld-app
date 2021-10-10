@@ -8,9 +8,9 @@ const loginSchema = {
 };
 
 const registrationSchema = {
-  username: { type: "string" },
+  username: "string|min:5|max:20",
   email: { type: "email" },
-  password: { type: "string" },
+  password: "string|min:7|max:30",
 };
 
 export = {
