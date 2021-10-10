@@ -8,9 +8,9 @@ interface User {
 }
 
 export interface Login {
-  user: Omit<User, "token" | "username" | "bio" | "image">;
+  user: Omit<User, 'token' | 'username' | 'bio' | 'image'>;
 }
 
 export interface Register {
-  user: Omit<User, "token" | "bio" | "image">;
+  user: Omit<User, 'token' | 'bio' | 'image'>;
 }

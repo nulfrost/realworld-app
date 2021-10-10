@@ -1,16 +1,16 @@
-import Validator from "fastest-validator";
+import Validator from 'fastest-validator';
 
 const v = new Validator();
 
 const loginSchema = {
-  email: { type: "email" },
-  password: "string",
+  email: { type: 'email' },
+  password: 'string',
 };
 
 const registrationSchema = {
-  username: "string|min:5|max:20",
-  email: { type: "email" },
-  password: "string|min:7|max:30",
+  username: 'string|min:5|max:20',
+  email: { type: 'email' },
+  password: 'string|min:7|max:30',
 };
 
 export = {
