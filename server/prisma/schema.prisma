@@ -36,7 +36,7 @@ model Article {
   title         String
   description   String
   body          String
-  tags          String[]
+  tags          String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
   favoriteCount Int
