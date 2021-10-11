@@ -26,4 +26,4 @@ app.use((error: any, _: Request, response: Response, next: NextFunction) => {
   return response.status(error.status).json(error);
 });
 
-app.listen(4000, () => console.info('Started server on: http://localhost:4000'));
+export default app;

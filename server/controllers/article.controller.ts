@@ -15,13 +15,19 @@ export = {
 
       const articles = await db.article.findMany({
         where: {
-          OR: [
+          AND: [
             {
               author: {
                 username: {
                   contains: author,
                   mode: 'insensitive',
                 },
+              },
+            },
+            {
+              tags: {
+                contains: tag,
+                mode: 'insensitive',
               },
             },
           ],
