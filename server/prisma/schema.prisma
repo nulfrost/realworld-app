@@ -31,17 +31,18 @@ model Profile {
 }
 
 model Article {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   slug          String
   title         String
   description   String
   body          String
   tags          String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
   favoriteCount Int
-  author        Profile  @relation(fields: [profileId], references: [id])
+  author        Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId     String
+  comments      Comment[] @relation("CommentToArticle")
 }
 
 model Comment {
@@ -49,6 +50,8 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   body      String
-  author    Profile  @relation(fields: [profileId], references: [id])
+  author    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId String
+  article   Article  @relation("CommentToArticle", fields: [articleId], references: [id])
+  articleId String
 }
