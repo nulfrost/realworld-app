@@ -3,11 +3,15 @@ import { router as userRouter } from '@/routes/user.route';
 import { router as profileRouter } from '@/routes/profile.route';
 import { router as articleRouter } from '@/routes/article.route';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('dev'));
+}
 app.use('/api', [userRouter, profileRouter, articleRouter]);
 
 app.get('/', (_, response: Response) => {

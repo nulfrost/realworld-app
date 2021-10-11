@@ -1,5 +1,6 @@
 import app from 'index';
+import { secrets } from 'config';
 
-app.listen(4000, () =>
+app.listen(secrets.port, () =>
   console.info('Started server on: http://localhost:4000')
 );

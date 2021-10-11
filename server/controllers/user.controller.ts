@@ -9,7 +9,11 @@ import jsonwebtoken from 'jsonwebtoken';
 import validator from '@/utils/schemas';
 
 export = {
-  login: async (request: Request<{}, {}, Login>, response: Response, next: NextFunction) => {
+  login: async (
+    request: Request<{}, {}, Login>,
+    response: Response,
+    next: NextFunction
+  ) => {
     try {
       const {
         user: { password, email },
@@ -55,10 +59,14 @@ export = {
           description: 'Invalid username or password.',
         });
 
-      const token = jsonwebtoken.sign({ id: user?.id }, secrets?.jwt as string, {
-        algorithm: 'HS256',
-        expiresIn: '1hr',
-      });
+      const token = jsonwebtoken.sign(
+        { id: user?.id },
+        secrets?.jwt as string,
+        {
+          algorithm: 'HS256',
+          expiresIn: '1hr',
+        }
+      );
 
       return response.status(200).json({
         user: {
@@ -71,7 +79,11 @@ export = {
       return next(createServerError(error));
     }
   },
-  register: async (request: Request<{}, {}, Register>, response: Response, next: NextFunction) => {
+  register: async (
+    request: Request<{}, {}, Register>,
+    response: Response,
+    next: NextFunction
+  ) => {
     try {
       const {
         user: { email, password, username },
@@ -164,7 +176,9 @@ export = {
     request: Request<
       {},
       {},
-      { user: Omit<User & Profile, 'createdAt' | 'updatedAt' | 'userId' | 'id'> }
+      {
+        user: Omit<User & Profile, 'createdAt' | 'updatedAt' | 'userId' | 'id'>;
+      }
     >,
     response: Response,
     next: NextFunction

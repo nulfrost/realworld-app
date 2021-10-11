@@ -26,7 +26,7 @@ model Profile {
   image    String?
   articles Article[]
   comments Comment[]
-  user     User      @relation("ProfileToUser", fields: [userId], references: [id])
+  user     User      @relation("ProfileToUser", fields: [userId], references: [id], onDelete: Cascade)
   userId   String    @unique
 }
 
