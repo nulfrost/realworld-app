@@ -43,7 +43,7 @@ export = {
       });
 
       const articlesWithAuthor = articles.map((article) => ({
-        ...omit([''], article),
+        ...omit(['profileId'], article),
         author: {
           id: article?.author?.id,
           username: article?.author?.username,
