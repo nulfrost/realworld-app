@@ -17,7 +17,7 @@ describe('Testing the /articles endpoints', () => {
   it('GET: /articles', (done) => {
     request(server).get('/api/articles').expect(200, done);
   });
-  it('GET: /articles?tag=', (done) => {
+  it('GET: /articles?tag={category}', (done) => {
     request(server).get('/api/articles?tag=lifestyle').expect(200, done);
   });
 });

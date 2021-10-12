@@ -2,7 +2,11 @@ import app from 'index';
 import request from 'supertest';
 import { db } from 'db';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 let server;
+let token;
 
 beforeAll(async () => {
   server = app.listen(4002);
@@ -10,32 +14,80 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await db.user.deleteMany();
-  db.$disconnect();
+  await db.$disconnect();
   server.close();
 });
 
 describe('Testing the /users endpoints', () => {
-  it('POST: /users', (done) => {
-    request(server)
-      .post('/api/users')
-      .send({
-        user: {
-          email: 'dane@test.com',
-          password: 'password',
-          username: 'Danex2',
-        },
-      })
-      .expect(201, done);
+  describe('Register', () => {
+    it('Should return a 400 status code if the username, password or email are missing', (done) => {
+      request(server)
+        .post('/api/users')
+        .send({
+          user: {
+            email: process.env.TEST_EMAIL,
+            password: process.env.TEST_PASSWORD,
+          },
+        })
+        .expect(400, done);
+    });
+    it('Should successfully register a user', (done) => {
+      request(server)
+        .post('/api/users')
+        .send({
+          user: {
+            email: process.env.TEST_EMAIL,
+            password: process.env.TEST_PASSWORD,
+            username: process.env.TEST_USERNAME,
+          },
+        })
+        .expect(201, done);
+    });
+    it('Should return a 422 status code if a users email is already registered', (done) => {
+      request(server)
+        .post('/api/users')
+        .send({
+          user: {
+            email: 'dane@test.com',
+            password: 'password',
+            username: 'Danex2',
+          },
+        })
+        .expect(422, done);
+    });
   });
-  it('POST: /users/login', (done) => {
-    request(server)
-      .post('/api/users/login')
-      .send({
-        user: {
-          email: 'dane@test.com',
-          password: 'password',
-        },
-      })
-      .expect(200, done);
+  describe('Login', () => {
+    it('Should successfully log a user in', (done) => {
+      request(server)
+        .post('/api/users/login')
+        .send({
+          user: {
+            email: process.env.TEST_EMAIL,
+            password: process.env.TEST_PASSWORD,
+          },
+        })
+        .expect(200)
+        .end((err, response) => {
+          token = response.body.user.token;
+          done();
+        });
+    });
+    it('Should return a 422 status code for if the users password is wrong', (done) => {
+      request(server)
+        .post('/api/users/login')
+        .send({
+          user: {
+            email: process.env.TEST_EMAIL,
+            password: 'zxcvbbnm',
+          },
+        })
+        .expect(422, done);
+    });
+    it('Should return a 200 status code if the user is authenticated and trying to view user information', (done) => {
+      request(server)
+        .get('/api/users')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200, done);
+    });
   });
 });

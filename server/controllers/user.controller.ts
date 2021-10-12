@@ -99,10 +99,16 @@ export = {
 
       const user: User | null = await db.user.findFirst({
         where: {
-          email,
-          profile: {
-            username,
-          },
+          OR: [
+            {
+              email,
+            },
+            {
+              profile: {
+                username,
+              },
+            },
+          ],
         },
         include: {
           profile: true,
