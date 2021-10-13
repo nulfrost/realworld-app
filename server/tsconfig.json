@@ -4,11 +4,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "baseUrl": ".",
-    "paths": {
-      "@/routes/*": ["routes/*"],
-      "@/controllers/*": ["controllers/*"],
-      "@/utils/*": ["utils/*"]
-    },
     "resolveJsonModule": false,
     "outDir": "../dist",
     "allowSyntheticDefaultImports": true,

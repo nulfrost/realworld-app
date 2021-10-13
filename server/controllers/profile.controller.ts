@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Profile } from '@prisma/client';
 import { db } from 'db';
 import { Message } from 'types';
-import { createServerError } from '@/utils/helpers';
+import { createServerError } from 'utils/helpers';
 
 export = {
   getProfile: async (

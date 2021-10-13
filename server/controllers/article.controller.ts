@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { db } from 'db';
-import { createServerError, omit } from '@/utils/helpers';
+import { createServerError, omit } from 'utils/helpers';
 
 type Query = { tag: string; author: string; limit: number; offset: number };
 

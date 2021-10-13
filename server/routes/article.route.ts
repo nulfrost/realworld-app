@@ -1,4 +1,4 @@
-import articleController from '@/controllers/article.controller';
+import articleController from 'controllers/article.controller';
 import express from 'express';
 
 const router = express.Router();

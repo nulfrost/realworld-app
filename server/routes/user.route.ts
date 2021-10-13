@@ -1,5 +1,5 @@
 import express from 'express';
-import userController from '@/controllers/user.controller';
+import userController from 'controllers/user.controller';
 import { jwtMiddleware } from 'middleware/auth';
 
 const router = express.Router();

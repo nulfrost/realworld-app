@@ -6,7 +6,7 @@ import { Login, Message, Register } from 'types';
 import { createServerError, omit } from 'utils/helpers';
 import bcrypt from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
-import validator from '@/utils/schemas';
+import validator from 'utils/schemas';
 
 export = {
   login: async (

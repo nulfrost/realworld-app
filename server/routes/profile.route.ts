@@ -1,5 +1,5 @@
 import express from 'express';
-import profileController from '@/controllers/profile.controller';
+import profileController from 'controllers/profile.controller';
 import { jwtMiddleware } from 'middleware/auth';
 
 const router = express.Router();
