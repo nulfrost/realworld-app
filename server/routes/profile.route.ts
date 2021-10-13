@@ -1,15 +1,11 @@
 import express from 'express';
 import profileController from '@/controllers/profile.controller';
-import jwt from 'express-jwt';
-import { secrets } from 'config';
+import { jwtMiddleware } from 'middleware/auth';
 
 const router = express.Router();
 
 router
   .route('/profiles/:username')
-  .get(
-    jwt({ secret: secrets.jwt, algorithms: ['HS256'], resultProperty: 'locals.token' }),
-    profileController.getProfile
-  );
+  .get(jwtMiddleware(), profileController.getProfile);
 
-export { router };
+export default router;

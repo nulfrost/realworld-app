@@ -1,7 +1,5 @@
 import express, { Response, Request, NextFunction } from 'express';
-import { router as userRouter } from '@/routes/user.route';
-import { router as profileRouter } from '@/routes/profile.route';
-import { router as articleRouter } from '@/routes/article.route';
+import { userRouter, articleRouter, profileRouter } from 'routes';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 dotenv.config();
