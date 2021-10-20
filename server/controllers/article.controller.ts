@@ -74,9 +74,22 @@ export = {
             startsWith: slug,
           },
         },
+        include: {
+          author: {
+            select: {
+              username: true,
+              bio: true,
+              image: true,
+            },
+          },
+        },
       });
 
-      return response.status(200).json(article);
+      return response.status(200).json({
+        article: {
+          ...omit(['profileId'], article),
+        },
+      });
     } catch (error) {
       return next(createServerError(error));
     }
