@@ -3,6 +3,7 @@ import { db } from 'db';
 import { createServerError, omit } from 'utils/helpers';
 
 type Query = { tag: string; author: string; limit: number; offset: number };
+type Param = { slug: string };
 
 export = {
   getArticles: async (
@@ -55,6 +56,27 @@ export = {
       return response.status(200).json({
         articles: articlesWithAuthor,
       });
+    } catch (error) {
+      return next(createServerError(error));
+    }
+  },
+  getSingleArticle: async (
+    request: Request<Param, {}, {}, {}>,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { slug } = request.params;
+
+      const article = await db.article.findFirst({
+        where: {
+          slug: {
+            startsWith: slug,
+          },
+        },
+      });
+
+      return response.status(200).json(article);
     } catch (error) {
       return next(createServerError(error));
     }

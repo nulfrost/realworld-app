@@ -13,6 +13,8 @@ afterAll(async () => {
   server.close();
 });
 
+// some endpoints require auth, figure out how to do that here
+
 describe('Testing the /articles endpoints', () => {
   it('GET: /articles', (done) => {
     request(server).get('/api/articles').expect(200, done);
