@@ -17,6 +17,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   profile   Profile? @relation("ProfileToUser")
+
+  @@map("users")
 }
 
 model Profile {
@@ -28,6 +30,8 @@ model Profile {
   comments Comment[]
   user     User      @relation("ProfileToUser", fields: [userId], references: [id], onDelete: Cascade)
   userId   String    @unique
+
+  @@map("profiles")
 }
 
 model Article {
@@ -43,6 +47,8 @@ model Article {
   author        Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId     String
   comments      Comment[] @relation("CommentToArticle")
+
+  @@map("articles")
 }
 
 model Comment {
@@ -54,4 +60,6 @@ model Comment {
   profileId String
   article   Article  @relation("CommentToArticle", fields: [articleId], references: [id])
   articleId String
+
+  @@map("comment")
 }

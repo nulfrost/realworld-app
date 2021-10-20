@@ -81,4 +81,31 @@ export = {
       return next(createServerError(error));
     }
   },
+  deleteArticle: async (
+    request: Request<Param, {}, {}, {}>,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { slug } = request.params;
+      const userId = response.locals.token.id as string;
+      const user = await db.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          profile: true,
+        },
+      });
+
+      await db.$executeRaw`DELETE FROM articles WHERE "profileId" = ${user?.profile?.id} AND slug = ${slug}`;
+      return response.status(200).json({
+        status: 200,
+        title: 'success',
+        description: 'Article was successfully deleted.',
+      });
+    } catch (error) {
+      return next(createServerError(error));
+    }
+  },
 };
