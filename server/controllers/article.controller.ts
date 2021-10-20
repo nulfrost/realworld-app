@@ -34,12 +34,40 @@ export = {
           ],
         },
         include: {
-          author: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+              bio: true,
+              image: true,
+            },
+          },
         },
         take: limit || 20,
         skip: offset || 0,
         orderBy: {
           createdAt: 'desc',
+        },
+      });
+
+      const articlesCount = await db.article.count({
+        where: {
+          AND: [
+            {
+              author: {
+                username: {
+                  contains: author,
+                  mode: 'insensitive',
+                },
+              },
+            },
+            {
+              tags: {
+                contains: tag,
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
       });
 
@@ -55,6 +83,7 @@ export = {
 
       return response.status(200).json({
         articles: articlesWithAuthor,
+        articlesCount,
       });
     } catch (error) {
       return next(createServerError(error));
