@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { db } from 'db';
-import { createServerError, omit } from 'utils/helpers';
+import { createServerError, omit, slugify } from 'utils/helpers';
+import { Article } from 'types';
 
 type Query = { tag: string; author: string; limit: number; offset: number };
 type Param = { slug: string };
@@ -118,6 +119,38 @@ export = {
         article: {
           ...omit(['profileId'], article),
         },
+      });
+    } catch (error) {
+      return next(createServerError(error));
+    }
+  },
+  updateArticle: async (
+    request: Request<Param, {}, Article, {}>,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const {
+        article: { title, description, body },
+      } = request.body;
+      const { slug } = request.params;
+      const userId = response.locals.token.id as string;
+      const user = await db.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          profile: true,
+        },
+      });
+      await db.$executeRaw`UPDATE articles SET (title, description, body, slug) = (${title}, ${description}, ${body}, ${slugify(
+        title
+      )}) WHERE slug = ${slug} AND "profileId" = ${user?.profile?.id}`;
+
+      return response.status(200).json({
+        status: 200,
+        title: 'success',
+        description: 'Article was successfully updated.',
       });
     } catch (error) {
       return next(createServerError(error));

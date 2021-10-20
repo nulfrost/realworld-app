@@ -8,6 +8,7 @@ router.route('/articles').get(articleController.getArticles);
 router
   .route('/articles/:slug')
   .get(jwtMiddleware(), articleController.getSingleArticle)
-  .delete(jwtMiddleware(), articleController.deleteArticle);
+  .delete(jwtMiddleware(), articleController.deleteArticle)
+  .put(jwtMiddleware(), articleController.updateArticle);
 
 export default router;
