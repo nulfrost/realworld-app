@@ -145,7 +145,7 @@ export = {
       });
       await db.$executeRaw`UPDATE articles SET (title, description, body, slug) = (${title}, ${description}, ${body}, ${slugify(
         title
-      )}) WHERE slug = ${slug} AND "profileId" = ${user?.profile?.id}`;
+      )}) WHERE "slug" = ${slug} AND "profileId" = ${user?.profile?.id}`;
 
       return response.status(200).json({
         status: 200,
